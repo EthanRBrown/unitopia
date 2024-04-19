@@ -1,0 +1,28 @@
+{
+  "name": "unitopia",
+  "version": "1.0.0",
+  "description": "Types and utilities for dealing with measurement units (time, length, mass, money, etc.).",
+  "type": "module",
+  "main": "dist/unitopia.cjs.js",
+  "module": "dist/unitopia.esm.js",
+  "browser": "dist/unitopia.umd.js",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "test": "vitest",
+    "build": "rollup -c",
+    "dev": "rollup -c -w"
+  },
+  "keywords": [],
+  "author": "Ethan Brown <e@optionlab.com>",
+  "license": "(MIT OR GPL-3.0)",
+  "devDependencies": {
+    "rollup": "^4.14.3",
+    "rollup-plugin-ts": "^3.4.5",
+    "tslib": "^2.6.2",
+    "type-fest": "^4.15.0",
+    "typescript": "^5.4.5",
+    "vitest": "^1.5.0"
+  }
+}
