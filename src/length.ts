@@ -36,31 +36,31 @@ export class Length<L extends LengthUnit = LengthUnit> {
       return { error: `invalid JSON: ${data}` }
     }
   }
-  static Kilometers(value: number) {
+  static Kilometers(value: number): Length<'Kilometer'> {
     return new Length(value, 'Kilometer')
   }
-  static Meters(value: number) {
+  static Meters(value: number): Length<'Meter'> {
     return new Length(value, 'Meter')
   }
-  static Centimeters(value: number) {
+  static Centimeters(value: number): Length<'Centimeter'> {
     return new Length(value, 'Centimeter')
   }
-  static Millimeters(value: number) {
+  static Millimeters(value: number): Length<'Millimeter'> {
     return new Length(value, 'Millimeter')
   }
-  static NauticalMiles(value: number) {
+  static NauticalMiles(value: number): Length<'Nautical Mile'> {
     return new Length(value, 'Nautical Mile')
   }
-  static Miles(value: number) {
+  static Miles(value: number): Length<'Mile'> {
     return new Length(value, 'Mile')
   }
-  static Yards(value: number) {
+  static Yards(value: number): Length<'Yard'> {
     return new Length(value, 'Yard')
   }
-  static Feet(value: number) {
+  static Feet(value: number): Length<'Foot'> {
     return new Length(value, 'Foot')
   }
-  static Inches(value: number) {
+  static Inches(value: number): Length<'Inch'> {
     return new Length(value, 'Inch')
   }
 
@@ -201,4 +201,7 @@ export function generateLengthConversionFactors(): Record<LengthUnit, Record<Len
   }
 }
 
-export const LENGTH_CONVERSION_FACTORS = generateLengthConversionFactors()
+export const LENGTH_CONVERSION_FACTORS: Record<
+  LengthUnit,
+  Record<LengthUnit, number>
+> = generateLengthConversionFactors()

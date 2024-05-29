@@ -35,28 +35,28 @@ export class Mass<M extends MassUnit = MassUnit> {
       return { error: `invalid JSON: ${data}` }
     }
   }
-  static Kilograms(value: number) {
+  static Kilograms(value: number): Mass<'Kilogram'> {
     return new Mass(value, 'Kilogram')
   }
-  static Grams(value: number) {
+  static Grams(value: number): Mass<'Gram'> {
     return new Mass(value, 'Gram')
   }
-  static Milligrams(value: number) {
+  static Milligrams(value: number): Mass<'Milligram'> {
     return new Mass(value, 'Milligram')
   }
-  static ShortTons(value: number) {
+  static ShortTons(value: number): Mass<'Short Ton'> {
     return new Mass(value, 'Short Ton')
   }
-  static LongTons(value: number) {
+  static LongTons(value: number): Mass<'Long Ton'> {
     return new Mass(value, 'Long Ton')
   }
-  static Tonnes(value: number) {
+  static Tonnes(value: number): Mass<'Tonne'> {
     return new Mass(value, 'Tonne')
   }
-  static Pounds(value: number) {
+  static Pounds(value: number): Mass<'Pound'> {
     return new Mass(value, 'Pound')
   }
-  static Ounces(value: number) {
+  static Ounces(value: number): Mass<'Ounce'> {
     return new Mass(value, 'Ounce')
   }
 
@@ -176,4 +176,4 @@ export function generateMassConversionFactors(): Record<MassUnit, Record<MassUni
   }
 }
 
-export const MASS_CONVERSION_FACTORS = generateMassConversionFactors()
+export const MASS_CONVERSION_FACTORS: Record<MassUnit, Record<MassUnit, number>> = generateMassConversionFactors()

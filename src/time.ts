@@ -26,19 +26,19 @@ export class Time<T extends TimeUnit = TimeUnit> {
       return { error: `invalid JSON: ${data}` }
     }
   }
-  static Weeks(value: number) {
+  static Weeks(value: number): Time<'Week'> {
     return new Time(value, 'Week')
   }
-  static Days(value: number) {
+  static Days(value: number): Time<'Day'> {
     return new Time(value, 'Day')
   }
-  static Hours(value: number) {
+  static Hours(value: number): Time<'Hour'> {
     return new Time(value, 'Hour')
   }
-  static Minutes(value: number) {
+  static Minutes(value: number): Time<'Minute'> {
     return new Time(value, 'Minute')
   }
-  static Seconds(value: number) {
+  static Seconds(value: number): Time<'Second'> {
     return new Time(value, 'Second')
   }
 
@@ -111,4 +111,4 @@ export function generateTimeConversionFactors(): Record<TimeUnit, Record<TimeUni
   }
 }
 
-export const TIME_CONVERSION_FACTORS = generateTimeConversionFactors()
+export const TIME_CONVERSION_FACTORS: Record<TimeUnit, Record<TimeUnit, number>> = generateTimeConversionFactors()
