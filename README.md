@@ -1,5 +1,6 @@
 # Unitopia
 
+
 Types and utilities for associating units (dimensions) to quantities. The primary use case for Unitopia is
 applications that deal with like measurements in possibly non-homogenous units. For example, an application
 that allows the user to switch between pounds and kilograms, or tasks that can be measured in days or weeks.
@@ -35,7 +36,7 @@ Coming not-so-soon:
 To create a quantity object, simply import the appropriate class and use the appropriate static method:
 
 ```ts
-import { Mass } from 'unitopia'
+import { Mass } from '@zepln/unitopia'
 
 const m1 = Mass.Pounds(100)
 const m2 = Mass.Kilograms(22)
@@ -78,7 +79,7 @@ else console.log(res.mass)
 Simply call the static `convert` method and specify the desired unit:
 
 ```ts
-import { Length } from 'unitopia'
+import { Length } from '@zepln/unitopia'
 const h1 = Length.Inches(71)
 const h2 = Length.convert(h1, 'Centimeter') // h2.value is 180.34000000072135
 ```
