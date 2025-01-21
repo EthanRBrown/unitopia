@@ -1,5 +1,8 @@
 import type { JsonObject } from 'type-fest'
 
+/**
+ * Supported length dimension units.
+ */
 export const LENGTH_UNITS = [
   'Kilometer',
   'Meter',
@@ -11,17 +14,46 @@ export const LENGTH_UNITS = [
   'Foot',
   'Inch',
 ] as const
+
+/**
+ * Length dimension unit ('Kilometer', 'Mile', etc.).
+ */
 export type LengthUnit = (typeof LENGTH_UNITS)[number]
 
+/**
+ * Length quantity.
+ */
 export class Length<L extends LengthUnit = LengthUnit> {
+  /**
+   * Available length units.
+   */
   static UNITS = LENGTH_UNITS
-  readonly dimension = 'Length'
+  /**
+   * Dimension string.
+   */
+  static DIMENSION = 'Length'
+  /**
+   * Dimension string.
+   */
+  readonly dimension = Length.DIMENSION
+  /**
+   * Constructs a length quantity with a value and length unit.
+   */
   constructor(public value: number, public unit: L) {}
+  /**
+   * Parses a length quantity from a JSON object or a string containing a JSON object.  If the
+   * parsing fails, an error is thrown.
+   */
   static parse(data: JsonObject | string): Length {
     const res = Length.tryParse(data)
     if ('error' in res) throw new Error(res.error)
     return res.length
   }
+  /**
+   * Attempts to parse a length quantity from a JSON object or string containing a JSON object.
+   * If the parsing fails, an object containing the property "error" with a string description of
+   * the error is returned.  Otherwise a valid Length instance is returned.
+   */
   static tryParse(data: JsonObject | string): { length: Length } | { error: string } {
     try {
       const o = typeof data === 'string' ? (JSON.parse(data) as JsonObject) : data
@@ -36,30 +68,57 @@ export class Length<L extends LengthUnit = LengthUnit> {
       return { error: `invalid JSON: ${data}` }
     }
   }
+  /**
+   * Convenience length constructor: kilometers.
+   */
   static Kilometers(value: number): Length<'Kilometer'> {
     return new Length(value, 'Kilometer')
   }
+  /**
+   * Convenience length constructor: miles.
+   */
   static Meters(value: number): Length<'Meter'> {
     return new Length(value, 'Meter')
   }
+  /**
+   * Convenience length constructor: centimeters.
+   */
   static Centimeters(value: number): Length<'Centimeter'> {
     return new Length(value, 'Centimeter')
   }
+  /**
+   * Convenience length constructor: millimeters.
+   */
   static Millimeters(value: number): Length<'Millimeter'> {
     return new Length(value, 'Millimeter')
   }
+  /**
+   * Convenience length constructor: nautical miles.
+   */
   static NauticalMiles(value: number): Length<'Nautical Mile'> {
     return new Length(value, 'Nautical Mile')
   }
+  /**
+   * Convenience length constructor: miles.
+   */
   static Miles(value: number): Length<'Mile'> {
     return new Length(value, 'Mile')
   }
+  /**
+   * Convenience length constructor: yards.
+   */
   static Yards(value: number): Length<'Yard'> {
     return new Length(value, 'Yard')
   }
+  /**
+   * Convenience length constructor: feet.
+   */
   static Feet(value: number): Length<'Foot'> {
     return new Length(value, 'Foot')
   }
+  /**
+   * Convenience length constructor: inches.
+   */
   static Inches(value: number): Length<'Inch'> {
     return new Length(value, 'Inch')
   }
@@ -201,6 +260,12 @@ export function generateLengthConversionFactors(): Record<LengthUnit, Record<Len
   }
 }
 
+/**
+ * Length conversion factors.
+ *
+ * @example
+ * 12 * LENGTH_CONVERSION_FACTORS['Inch']['Foot'] // 1
+ */
 export const LENGTH_CONVERSION_FACTORS: Record<
   LengthUnit,
   Record<LengthUnit, number>

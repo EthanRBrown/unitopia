@@ -1,17 +1,49 @@
 import type { JsonObject } from 'type-fest'
 
+/**
+ * Supported time dimension units.
+ */
 export const TIME_UNITS = ['Week', 'Day', 'Hour', 'Minute', 'Second'] as const
+
+/**
+ * Time dimension unit ('Week, 'Minute', etc.)
+ */
 export type TimeUnit = (typeof TIME_UNITS)[number]
 
+/**
+ * Time quantity.
+ */
 export class Time<T extends TimeUnit = TimeUnit> {
+  /**
+   * Available time units.
+   */
   static UNITS = TIME_UNITS
-  readonly dimension = 'Time'
+  /**
+   * Dimension string.
+   */
+  static DIMENSION = 'Time'
+  /**
+   * Dimension string.
+   */
+  readonly dimension = Time.DIMENSION
+  /**
+   * Constructs a time quantity with a value and time unit.
+   */
   constructor(public value: number, public unit: T) {}
+  /**
+   * Parses a time quantity from a JSON object or a string containing a JSON object.  If the
+   * parsing fails, an error is thrown.
+   */
   static parse(data: JsonObject | string): Time {
     const res = Time.tryParse(data)
     if ('error' in res) throw new Error(res.error)
     return res.time
   }
+  /**
+   * Attempts to parse a time quantity from a JSON object or string containing a JSON object.
+   * If the parsing fails, an object containing the property "error" with a string description of
+   * the error is returned.  Otherwise a valid Time instance is returned.
+   */
   static tryParse(data: JsonObject | string): { time: Time } | { error: string } {
     try {
       const o = typeof data === 'string' ? (JSON.parse(data) as JsonObject) : data
@@ -26,18 +58,33 @@ export class Time<T extends TimeUnit = TimeUnit> {
       return { error: `invalid JSON: ${data}` }
     }
   }
+  /**
+   * Convenience constructor: weeks.
+   */
   static Weeks(value: number): Time<'Week'> {
     return new Time(value, 'Week')
   }
+  /**
+   * Convenience constructor: days.
+   */
   static Days(value: number): Time<'Day'> {
     return new Time(value, 'Day')
   }
+  /**
+   * Convenience constructor: hours.
+   */
   static Hours(value: number): Time<'Hour'> {
     return new Time(value, 'Hour')
   }
+  /**
+   * Convenience constructor: minutes.
+   */
   static Minutes(value: number): Time<'Minute'> {
     return new Time(value, 'Minute')
   }
+  /**
+   * Convenience constructor: seconds.
+   */
   static Seconds(value: number): Time<'Second'> {
     return new Time(value, 'Second')
   }
@@ -111,4 +158,10 @@ export function generateTimeConversionFactors(): Record<TimeUnit, Record<TimeUni
   }
 }
 
+/**
+ * Time conversion factors.
+ *
+ * @example
+ * 60 * TIME_CONVERSION_FACTORS['Minute']['Hour'] // 1
+ */
 export const TIME_CONVERSION_FACTORS: Record<TimeUnit, Record<TimeUnit, number>> = generateTimeConversionFactors()

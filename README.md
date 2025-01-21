@@ -1,6 +1,5 @@
 # Unitopia
 
-
 Types and utilities for associating units (dimensions) to quantities. The primary use case for Unitopia is
 applications that deal with like measurements in possibly non-homogenous units. For example, an application
 that allows the user to switch between pounds and kilograms, or tasks that can be measured in days or weeks.
@@ -42,13 +41,13 @@ const m1 = Mass.Pounds(100)
 const m2 = Mass.Kilograms(22)
 ```
 
-The type of `m1` will be `Mass<'Pound'>`, tye type of `m2` will be `Mass<'Kilogram'>`. You can also use the `Mass` constructor but (currently) it won't be typed to the specific unit:
+The type of `m1` will be `Mass<'Pound'>`, tye type of `m2` will be `Mass<'Kilogram'>`. You can also use the `Mass` constructor:
 
 ```ts
 const m3 = new Mass(2, 'Short Ton')
 ```
 
-The type of `m3` will be `Mass<'Kilogram' | 'Milligram' | 'Gram' | 'Short Ton' |...>`. For this reason, it's preferred to use the convenience constructors illustrated above.
+The type of `m3` will be `Mass<'Short Ton'>`.
 
 ### Serializing Quantities
 
@@ -70,8 +69,20 @@ try {
   console.error('parsing error:', err.message)
 }
 const res = Mass.tryParse({ dimension: 'Mass', unit: 'Gram', value: 100 })
-if ('error' in res) console.error('parsing error:', err.message)
+if ('error' in res) console.error('parsing error:', res.error)
 else console.log(res.mass)
+```
+
+You can also deserialize a quantity of an unknown dimension:
+
+```ts
+import { parseQuantityJson } from '@zepln/unitopia'
+try {
+  const q = parseQuantityJson({ dimension: 'Mass', unit: 'Gram', value: 100 })
+  console.log(q) // q is of type "Quantity"
+} catch (err) {
+  console.error('parsing error:', err.message)
+}
 ```
 
 ### Unit Conversion
@@ -95,4 +106,4 @@ const lengths_in_cm = Length.normalize(length, 'Centimeter')
 
 ## Contributing
 
-TODO
+Please [open an issue](https://github.com/EthanRBrown/unitopia/issues) describing what you want to do, and we'll be in touch. If this project grows in popularity, we will develop a more formal process.

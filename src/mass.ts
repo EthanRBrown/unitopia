@@ -1,5 +1,8 @@
 import type { JsonObject } from 'type-fest'
 
+/**
+ * Supported mass dimension units.
+ */
 export const MASS_UNITS = [
   'Kilogram',
   'Gram',
@@ -10,17 +13,46 @@ export const MASS_UNITS = [
   'Pound',
   'Ounce',
 ] as const
+
+/**
+ * Mass dimension unit ('Kilogram', 'Pound', etc.).
+ */
 export type MassUnit = (typeof MASS_UNITS)[number]
 
+/**
+ * Mass quantity.
+ */
 export class Mass<M extends MassUnit = MassUnit> {
+  /**
+   * Available mass units.
+   */
   static UNITS = MASS_UNITS
-  readonly dimension = 'Mass'
+  /**
+   * Dimension string.
+   */
+  static DIMENSION = 'Mass'
+  /**
+   * Dimension string.
+   */
+  readonly dimension = Mass.DIMENSION
+  /**
+   * Constructs a mass quantity with a value and mass unit.
+   */
   constructor(public value: number, public unit: M) {}
+  /**
+   * Parses a mass quantity from a JSON object or a string containing a JSON object.  If the
+   * parsing fails, an error is thrown.
+   */
   static parse(data: JsonObject | string): Mass {
     const res = Mass.tryParse(data)
     if ('error' in res) throw new Error(res.error)
     return res.mass
   }
+  /**
+   * Attempts to parse a mass quantity from a JSON object or string containing a JSON object.
+   * If the parsing fails, an object containing the property "error" with a string description of
+   * the error is returned.  Otherwise a valid Mass instance is returned.
+   */
   static tryParse(data: JsonObject | string): { mass: Mass } | { error: string } {
     try {
       const o = typeof data === 'string' ? (JSON.parse(data) as JsonObject) : data
@@ -35,27 +67,51 @@ export class Mass<M extends MassUnit = MassUnit> {
       return { error: `invalid JSON: ${data}` }
     }
   }
+  /**
+   * Convenience length constructor: kilograms.
+   */
   static Kilograms(value: number): Mass<'Kilogram'> {
     return new Mass(value, 'Kilogram')
   }
+  /**
+   * Convenience length constructor: grams.
+   */
   static Grams(value: number): Mass<'Gram'> {
     return new Mass(value, 'Gram')
   }
+  /**
+   * Convenience length constructor: milligrams.
+   */
   static Milligrams(value: number): Mass<'Milligram'> {
     return new Mass(value, 'Milligram')
   }
+  /**
+   * Convenience length constructor: short tons.
+   */
   static ShortTons(value: number): Mass<'Short Ton'> {
     return new Mass(value, 'Short Ton')
   }
+  /**
+   * Convenience length constructor: long tons.
+   */
   static LongTons(value: number): Mass<'Long Ton'> {
     return new Mass(value, 'Long Ton')
   }
+  /**
+   * Convenience length constructor: tonnes.
+   */
   static Tonnes(value: number): Mass<'Tonne'> {
     return new Mass(value, 'Tonne')
   }
+  /**
+   * Convenience length constructor: pounds.
+   */
   static Pounds(value: number): Mass<'Pound'> {
     return new Mass(value, 'Pound')
   }
+  /**
+   * Convenience length constructor: ounces.
+   */
   static Ounces(value: number): Mass<'Ounce'> {
     return new Mass(value, 'Ounce')
   }
@@ -176,4 +232,10 @@ export function generateMassConversionFactors(): Record<MassUnit, Record<MassUni
   }
 }
 
+/**
+ * Mass conversion factors.
+ *
+ * @example
+ * 16 * LENGTH_CONVERSION_FACTORS['Ounce']['Pound'] // 1
+ */
 export const MASS_CONVERSION_FACTORS: Record<MassUnit, Record<MassUnit, number>> = generateMassConversionFactors()

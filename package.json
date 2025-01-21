@@ -1,6 +1,6 @@
 {
   "name": "@zepln/unitopia",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Types and utilities for dealing with measurement units (time, length, mass, money, etc.).",
   "type": "module",
   "main": "dist/unitopia.cjs.js",
@@ -22,10 +22,9 @@
     "rollup": "^4.14.3",
     "rollup-plugin-ts": "^3.4.5",
     "tslib": "^2.6.2",
+    "type-fest": "^4.33.0",
     "typescript": "^5.4.5",
     "vitest": "^1.5.0"
   },
-  "dependencies": {
-    "type-fest": "^4.18.3"
-  }
+  "packageManager": "pnpm@9.15.4+sha512.b2dc20e2fc72b3e18848459b37359a32064663e5627a51e4c74b2c29dd8e8e0491483c3abb40789cfd578bf362fb6ba8261b05f0387d76792ed6e23ea3b1b6a0"
 }

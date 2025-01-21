@@ -7,10 +7,6 @@ settings:
 importers:
 
   .:
-    dependencies:
-      type-fest:
-        specifier: ^4.18.3
-        version: 4.18.3
     devDependencies:
       '@types/node':
         specifier: ^20.12.12
@@ -24,6 +20,9 @@ importers:
       tslib:
         specifier: ^2.6.2
         version: 2.6.2
+      type-fest:
+        specifier: ^4.33.0
+        version: 4.33.0
       typescript:
         specifier: ^5.4.5
         version: 5.4.5
@@ -625,8 +624,8 @@ packages:
     resolution: {integrity: sha512-0fr/mIH1dlO+x7TlcMy+bIDqKPsw/70tVyeHW787goQjhmqaZe10uwLujubK9q9Lg6Fiho1KUKDYz0Z7k7g5/g==}
     engines: {node: '>=4'}
 
-  type-fest@4.18.3:
-    resolution: {integrity: sha512-Q08/0IrpvM+NMY9PA2rti9Jb+JejTddwmwmVQGskAlhtcrw1wsRzoR6ode6mR+OAabNa75w/dxedSUY2mlphaQ==}
+  type-fest@4.33.0:
+    resolution: {integrity: sha512-s6zVrxuyKbbAsSAD5ZPTB77q4YIdRctkTbJ2/Dqlinwz+8ooH2gd+YA7VA6Pa93KML9GockVvoxjZ2vHP+mu8g==}
     engines: {node: '>=16'}
 
   typescript@5.4.5:
@@ -1206,7 +1205,7 @@ snapshots:
 
   type-detect@4.0.8: {}
 
-  type-fest@4.18.3: {}
+  type-fest@4.33.0: {}
 
   typescript@5.4.5: {}
 
