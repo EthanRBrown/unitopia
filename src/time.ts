@@ -11,6 +11,11 @@ export const TIME_UNITS = ['Week', 'Day', 'Hour', 'Minute', 'Second'] as const
 export type TimeUnit = (typeof TIME_UNITS)[number]
 
 /**
+ * Time dimension string (interchangeable with Time.DIMENSION).
+ */
+export const TIME_DIMENSION = 'Time' as const
+
+/**
  * Time quantity.
  */
 export class Time<T extends TimeUnit = TimeUnit> {
@@ -21,7 +26,7 @@ export class Time<T extends TimeUnit = TimeUnit> {
   /**
    * Dimension string.
    */
-  static DIMENSION = 'Time'
+  static DIMENSION = TIME_DIMENSION
   /**
    * Dimension string.
    */

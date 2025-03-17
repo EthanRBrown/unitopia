@@ -21,6 +21,21 @@ export const LENGTH_UNITS = [
 export type LengthUnit = (typeof LENGTH_UNITS)[number]
 
 /**
+ * Length dimension string (interchangeable with Length.DIMENSION).
+ */
+export const LENGTH_DIMENSION = 'Length' as const
+
+/**
+ * Possible errors when parsing length from JSON.
+ */
+export type LengthParseError =
+  | { error: `data.value is non-numeric`; value: any }
+  | { error: `data.unit is missing or invalid`; unit: any }
+  | { error: `unsupported length unit`; unit: any }
+  | { error: `data.dimension is not ${typeof LENGTH_DIMENSION}`; dimension: any }
+  | { error: `invalid JSON`; data: any }
+
+/**
  * Length quantity.
  */
 export class Length<L extends LengthUnit = LengthUnit> {
@@ -31,7 +46,7 @@ export class Length<L extends LengthUnit = LengthUnit> {
   /**
    * Dimension string.
    */
-  static DIMENSION = 'Length'
+  static DIMENSION = LENGTH_DIMENSION
   /**
    * Dimension string.
    */
@@ -54,18 +69,20 @@ export class Length<L extends LengthUnit = LengthUnit> {
    * If the parsing fails, an object containing the property "error" with a string description of
    * the error is returned.  Otherwise a valid Length instance is returned.
    */
-  static tryParse(data: JsonObject | string): { length: Length } | { error: string } {
+  static tryParse(data: JsonObject | string): { length: Length } | LengthParseError {
     try {
       const o = typeof data === 'string' ? (JSON.parse(data) as JsonObject) : data
-      if (typeof o.value !== 'number') return { error: `data.value is non-numeric` }
-      if (!('unit' in o) || typeof o.unit !== 'string') return { error: `data.unit is missing or invalid` }
+      if (typeof o.value !== 'number') return { error: `data.value is non-numeric`, value: o.value }
+      if (!('unit' in o) || typeof o.unit !== 'string')
+        return { error: `data.unit is missing or invalid`, unit: o.unit }
       const unit = o.unit as LengthUnit
-      if (!Length.UNITS.includes(unit)) return { error: `unsupported length unit: ${o.unit}` }
+      if (!Length.UNITS.includes(unit)) return { error: `unsupported length unit`, unit: o.unit }
       const length = new Length(o.value, unit)
-      if (o.dimension !== length.dimension) return { error: `data.dimension is not ${length.dimension}` }
+      if (o.dimension !== LENGTH_DIMENSION)
+        return { error: `data.dimension is not ${LENGTH_DIMENSION}`, dimension: length.dimension }
       return { length }
     } catch (err) {
-      return { error: `invalid JSON: ${data}` }
+      return { error: `invalid JSON`, data }
     }
   }
   /**

@@ -15,6 +15,21 @@ export const MASS_UNITS = [
 ] as const
 
 /**
+ * Mass dimension string (interchangeable with Mass.DIMENSION).
+ */
+export const MASS_DIMENSION = 'Mass' as const
+
+/**
+ * Possible errors when parsing mass from JSON.
+ */
+export type MassParseError =
+  | { error: `data.value is non-numeric`; value: any }
+  | { error: `data.unit is missing or invalid`; unit: any }
+  | { error: `unsupported length unit`; unit: any }
+  | { error: `data.dimension is not ${typeof MASS_DIMENSION}`; dimension: any }
+  | { error: `invalid JSON`; data: any }
+
+/**
  * Mass dimension unit ('Kilogram', 'Pound', etc.).
  */
 export type MassUnit = (typeof MASS_UNITS)[number]
@@ -30,7 +45,7 @@ export class Mass<M extends MassUnit = MassUnit> {
   /**
    * Dimension string.
    */
-  static DIMENSION = 'Mass'
+  static DIMENSION = MASS_DIMENSION
   /**
    * Dimension string.
    */
@@ -53,18 +68,20 @@ export class Mass<M extends MassUnit = MassUnit> {
    * If the parsing fails, an object containing the property "error" with a string description of
    * the error is returned.  Otherwise a valid Mass instance is returned.
    */
-  static tryParse(data: JsonObject | string): { mass: Mass } | { error: string } {
+  static tryParse(data: JsonObject | string): { mass: Mass } | MassParseError {
     try {
       const o = typeof data === 'string' ? (JSON.parse(data) as JsonObject) : data
-      if (typeof o.value !== 'number') return { error: `data.value is non-numeric` }
-      if (!('unit' in o) || typeof o.unit !== 'string') return { error: `data.unit is missing or invalid` }
+      if (typeof o.value !== 'number') return { error: `data.value is non-numeric`, value: o.value }
+      if (!('unit' in o) || typeof o.unit !== 'string')
+        return { error: `data.unit is missing or invalid`, unit: o.unit }
       const unit = o.unit as MassUnit
-      if (!Mass.UNITS.includes(unit)) return { error: `unsupported length unit: ${o.unit}` }
+      if (!Mass.UNITS.includes(unit)) return { error: `unsupported length unit`, unit: o.unit }
       const mass = new Mass(o.value, unit)
-      if (o.dimension !== mass.dimension) return { error: `data.dimension is not ${mass.dimension}` }
+      if (o.dimension !== MASS_DIMENSION)
+        return { error: `data.dimension is not ${MASS_DIMENSION}`, dimension: o.dimension }
       return { mass }
     } catch (err) {
-      return { error: `invalid JSON: ${data}` }
+      return { error: `invalid JSON`, data }
     }
   }
   /**

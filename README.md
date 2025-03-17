@@ -16,13 +16,14 @@ Currently available dimensions:
 - Length
 - Mass (weight)
 - Time
+- Money (currency)
 
 Coming soon:
 
-- Money (currency)
 - Power (Watt)
 - Current (Ampere)
 - Voltage (Volt)
+- Async currency conversion using common pre-configured services
 
 Coming not-so-soon:
 
@@ -95,6 +96,8 @@ const h1 = Length.Inches(71)
 const h2 = Length.convert(h1, 'Centimeter') // h2.value is 180.34000000072135
 ```
 
+Note: unit conversion is not currently available for `Money`.
+
 ### Unit Array Normalization
 
 To normalize an array of possibly nonhomogeneous values, call the static `normalize` method:
@@ -103,6 +106,23 @@ To normalize an array of possibly nonhomogeneous values, call the static `normal
 const lengths = [Length.Inches(71), Length.Meters(0.5), Length.Feet(2.5)]
 const lengths_in_cm = Length.normalize(length, 'Centimeter')
 ```
+
+Note: normalization is not currently available for `Money`.
+
+### Money
+
+The `Money` API matches other units with one exception: `Money` quantities have an additional property, `updatedAt`, which can be used to capture the time value of money. Note that updating a `Money` quantity's value will not automatically update the `updatedAt` property:
+
+```ts
+import { Money } from '@zepln/unitopia'
+
+const m1 = Money.USD(15) // updatedAt will be current timestamp
+const m2 = Money.USD(15, new Date('1980-01-01').valueOf()) // 1980s dollars!
+m2.value = 20 // still 1980s dollars
+m2.updatedAt = Date.now() // current dollars; no conversion is done, value is still 20
+```
+
+Async conversion, normalization, and time-value conversion functionality will be included in the future using common currency conversion services.
 
 ## Contributing
 
