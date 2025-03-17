@@ -1,5 +1,4 @@
-import { warn } from 'console'
-import type { JsonObject } from 'type-fest'
+import type { JsonObject } from './jsonTypes'
 
 /**
  * Supported cryptocurrencies.  THis is not currently a comprehensive list, but includes some of

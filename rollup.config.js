@@ -1,7 +1,16 @@
-import ts from 'rollup-plugin-ts'
+import resolve from '@rollup/plugin-node-resolve'
+import sucrase from '@rollup/plugin-sucrase'
 import { readFileSync } from 'node:fs'
 
 const pkg = JSON.parse(readFileSync(new URL('./package.json', import.meta.url)))
+
+const plugins = [
+  resolve({ extensions: ['.js', '.ts'] }),
+  sucrase({
+    exclude: ['node_modules/**'],
+    transforms: ['typescript'],
+  }),
+]
 
 export default [
   // browser-friendly UMD build
@@ -12,7 +21,7 @@ export default [
       file: pkg.browser,
       format: 'umd',
     },
-    plugins: [ts()],
+    plugins,
   },
 
   // CommonJS (for Node) and ES module (for bundlers) build.
@@ -27,6 +36,6 @@ export default [
       { file: pkg.main, format: 'cjs' },
       { file: pkg.module, format: 'es' },
     ],
-    plugins: [ts()],
+    plugins,
   },
 ]

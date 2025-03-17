@@ -1,7 +1,8 @@
-import type { JsonObject } from 'type-fest'
 import { Length } from './length.ts'
 import { Mass } from './mass.ts'
 import { Time } from './time.ts'
+
+import type { JsonObject } from './jsonTypes.ts'
 
 /**
  * A union type that can represent any type of quantity.  Only useful in instances where
