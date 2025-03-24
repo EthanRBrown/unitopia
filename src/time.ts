@@ -3,7 +3,7 @@ import type { JsonObject } from './jsonTypes'
 /**
  * Supported time dimension units.
  */
-export const TIME_UNITS = ['Week', 'Day', 'Hour', 'Minute', 'Second'] as const
+export const TIME_UNITS = ['Year', 'Quarter', 'Month', 'Week', 'Day', 'Hour', 'Minute', 'Second'] as const
 
 /**
  * Time dimension unit ('Week, 'Minute', etc.)
@@ -112,6 +112,16 @@ export class Time<T extends TimeUnit = TimeUnit> {
 }
 
 /**
+ * Mean days in year in the Gregorian calendar.
+ */
+const DAYS_IN_YEAR = 365.2425
+
+/**
+ * Mean weeks in a month in the Gregorian calendar.
+ */
+const WEEKS_IN_MONTH = 6957 / 1600
+
+/**
  * Generate complete conversion factors between any two time units.  Returns a map whose
  * outermost keys are the "from" unit and the innermost keys are the "to" unit.
  *
@@ -125,7 +135,44 @@ export class Time<T extends TimeUnit = TimeUnit> {
  */
 export function generateTimeConversionFactors(): Record<TimeUnit, Record<TimeUnit, number>> {
   return {
+    Year: {
+      // year to...
+      Year: 1,
+      Quarter: 4,
+      Month: 12,
+      Week: DAYS_IN_YEAR / 7,
+      Day: DAYS_IN_YEAR,
+      Hour: DAYS_IN_YEAR * 7 * 24,
+      Minute: DAYS_IN_YEAR * 7 * 24 * 60,
+      Second: DAYS_IN_YEAR * 7 * 24 * 60 * 60,
+    },
+    Quarter: {
+      // quarter to...
+      Year: 1 / 4,
+      Quarter: 1,
+      Month: 1 / 4,
+      Week: (1 / 4) * WEEKS_IN_MONTH,
+      Day: (1 / 4) * WEEKS_IN_MONTH * 7,
+      Hour: (1 / 4) * WEEKS_IN_MONTH * 7 * 24,
+      Minute: (1 / 4) * WEEKS_IN_MONTH * 7 * 24 * 60,
+      Second: (1 / 4) * WEEKS_IN_MONTH * 7 * 24 * 60 * 60,
+    },
+    Month: {
+      // month to...
+      Year: 1 / 12,
+      Quarter: 1 / 4,
+      Month: 1,
+      Week: WEEKS_IN_MONTH,
+      Day: WEEKS_IN_MONTH * 7,
+      Hour: WEEKS_IN_MONTH * 7 * 24,
+      Minute: WEEKS_IN_MONTH * 7 * 24 * 60,
+      Second: WEEKS_IN_MONTH * 7 * 24 * 60 * 60,
+    },
     Week: {
+      // week to...
+      Year: 7 / DAYS_IN_YEAR,
+      Quarter: (7 / DAYS_IN_YEAR) * 4,
+      Month: 1 / WEEKS_IN_MONTH,
       Week: 1,
       Day: 7,
       Hour: 7 * 24,
@@ -133,6 +180,10 @@ export function generateTimeConversionFactors(): Record<TimeUnit, Record<TimeUni
       Second: 7 * 24 * 60 * 60,
     },
     Day: {
+      // day to...
+      Year: 1 / DAYS_IN_YEAR,
+      Quarter: (1 / DAYS_IN_YEAR) * 4,
+      Month: 1 / 7 / WEEKS_IN_MONTH,
       Week: 1 / 7,
       Day: 1,
       Hour: 24,
@@ -140,22 +191,34 @@ export function generateTimeConversionFactors(): Record<TimeUnit, Record<TimeUni
       Second: 24 * 60 * 60,
     },
     Hour: {
-      Week: 1 / 7 / 24,
+      // hour to...
+      Year: 1 / 24 / 7 / DAYS_IN_YEAR,
+      Quarter: (1 / 24 / 7 / DAYS_IN_YEAR) * 4,
+      Month: 1 / 24 / 7 / WEEKS_IN_MONTH,
+      Week: 1 / 24 / 7,
       Day: 1 / 24,
       Hour: 1,
       Minute: 60,
       Second: 60 * 60,
     },
     Minute: {
-      Week: 1 / 7 / 24 / 60,
-      Day: 1 / 24 / 60,
+      // minute to...
+      Year: 1 / 60 / 24 / DAYS_IN_YEAR,
+      Quarter: (1 / 60 / 24 / DAYS_IN_YEAR) * 4,
+      Month: 1 / 60 / 24 / 7 / WEEKS_IN_MONTH,
+      Week: 1 / 60 / 24 / 7,
+      Day: 1 / 60 / 24,
       Hour: 1 / 60,
       Minute: 1,
       Second: 60,
     },
     Second: {
-      Week: 1 / 7 / 24 / 60 / 60,
-      Day: 1 / 24 / 60 / 60,
+      // second to...
+      Year: 1 / 60 / 60 / 24 / DAYS_IN_YEAR,
+      Quarter: (1 / 60 / 60 / 24 / DAYS_IN_YEAR) * 4,
+      Month: 1 / 60 / 60 / 24 / 7 / WEEKS_IN_MONTH,
+      Week: 1 / 60 / 60 / 24 / 7,
+      Day: 1 / 60 / 60 / 24,
       Hour: 1 / 60 / 60,
       Minute: 1 / 60,
       Second: 1,
