@@ -14,6 +14,30 @@ import type { JsonObject } from './jsonTypes.ts'
  */
 export type Quantity = Length | Mass | Time | Money
 
+// IMPORTANT NOTE: this would be more efficiently defined as `Quantity['dimension']`, but this
+// falls into the category of a "Slow Type" (https://jsr.io/docs/about-slow-types), and ends
+// up as "any" in the published package; hence, this must be defined as shown here
+/**
+ * The types of quantity dimensions currently available in the library.
+ */
+export type QuantityDimension =
+  | typeof LENGTH_DIMENSION
+  | typeof MASS_DIMENSION
+  | typeof TIME_DIMENSION
+  | typeof MONEY_DIMENSION
+
+type DimensionSeparator = ' :: '
+/**
+ * A string that uniquely identifies a dimension and unit in the format `[Dimension] :: [Unit]`.
+ * For example, 'Mass :: Kilogram' and 'Length :: Kilometer' are valid quantity type strings,
+ * but 'Mass :: Kilometer' is not.
+ */
+export type QuantityTypeString =
+  | `${typeof LENGTH_DIMENSION}${DimensionSeparator}${LengthUnit}`
+  | `${typeof MASS_DIMENSION}${DimensionSeparator}${MassUnit}`
+  | `${typeof TIME_DIMENSION}${DimensionSeparator}${TimeUnit}`
+  | `${typeof MONEY_DIMENSION}${DimensionSeparator}${MoneyUnit}`
+
 /**
  * Given a JSON object, attempt to parse it as a quantity.  Based on the "dimension" property
  * of the object, the "parse" function fo the associated quantity type will be used (i.e.
@@ -34,34 +58,3 @@ export function parseQuantityJson(data: JsonObject): Quantity {
       throw new Error(`unrecognized/unsupported quantity dimension: ${data.dimension}`)
   }
 }
-
-/**
- * The types of quantity dimensions currently available in the library.
- */
-// export type QuantityDimensions = Quantity['dimension']
-export type QuantityDimensions =
-  | typeof LENGTH_DIMENSION
-  | typeof MASS_DIMENSION
-  | typeof TIME_DIMENSION
-  | typeof MONEY_DIMENSION
-type DimensionSeparator = ' :: '
-export type QuantityTypeString3 =
-  | `${typeof LENGTH_DIMENSION}${DimensionSeparator}${LengthUnit}`
-  | `${typeof MASS_DIMENSION}${DimensionSeparator}${MassUnit}`
-  | `${typeof TIME_DIMENSION}${DimensionSeparator}${TimeUnit}`
-  | `${typeof MONEY_DIMENSION}${DimensionSeparator}${MoneyUnit}`
-
-/**
- * Helper type for QuantityTypeString.  Not exported because I don't see any particular
- * useful application other than building QuantityTypeString.
- */
-type QuantityUnits<Q extends Quantity = Quantity> = Extract<Quantity, { dimension: Q['dimension'] }>['unit']
-
-/**
- * A string that uniquely identifies a dimension and unit in the format `[Dimension] :: [Unit]`.
- * For example, 'Mass :: Kilogram' and 'Length :: Kilometer' are valid quantity type strings,
- * but 'Mass :: Kilometer' is not.
- */
-export type QuantityTypeString<Q extends Quantity = Quantity> = Q extends Quantity & { dimension: Q['dimension'] }
-  ? `${Q['dimension']} :: ${QuantityUnits<Q>}`
-  : never
