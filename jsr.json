@@ -1,5 +1,5 @@
 {
   "name": "@zepln/unitopia",
-  "version": "1.0.7-beta0",
+  "version": "1.0.7-beta1",
   "exports": "./src/main.ts"
 }
