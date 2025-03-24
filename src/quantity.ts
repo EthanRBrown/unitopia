@@ -1,6 +1,7 @@
 import { Length } from './length.ts'
 import { Mass } from './mass.ts'
 import { Time } from './time.ts'
+import { Money } from './money.ts'
 
 import type { JsonObject } from './jsonTypes.ts'
 
@@ -11,7 +12,7 @@ import type { JsonObject } from './jsonTypes.ts'
  * there is no way to meaningfully add the values of a collection of quantities that contains
  * length and mass quantities.
  */
-export type Quantity = Length | Mass | Time
+export type Quantity = Length | Mass | Time | Money
 
 /**
  * Given a JSON object, attempt to parse it as a quantity.  Based on the "dimension" property
@@ -27,6 +28,8 @@ export function parseQuantityJson(data: JsonObject): Quantity {
       return Mass.parse(data)
     case Time.DIMENSION:
       return Time.parse(data)
+    case Money.DIMENSION:
+      return Money.parse(data)
     default:
       throw new Error(`unrecognized/unsupported quantity dimension: ${data.dimension}`)
   }
