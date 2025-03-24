@@ -64,6 +64,24 @@ export class Time<T extends TimeUnit = TimeUnit> {
     }
   }
   /**
+   * Convenience constructor: years.
+   */
+  static Years(value: number): Time<'Year'> {
+    return new Time(value, 'Year')
+  }
+  /**
+   * Convenience constructor: quarters.
+   */
+  static Quarters(value: number): Time<'Quarter'> {
+    return new Time(value, 'Quarter')
+  }
+  /**
+   * Convenience constructor: months.
+   */
+  static Months(value: number): Time<'Month'> {
+    return new Time(value, 'Month')
+  }
+  /**
    * Convenience constructor: weeks.
    */
   static Weeks(value: number): Time<'Week'> {
