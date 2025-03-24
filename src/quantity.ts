@@ -1,7 +1,7 @@
-import { Length } from './length.ts'
-import { Mass } from './mass.ts'
-import { Time } from './time.ts'
-import { Money } from './money.ts'
+import { Length, LengthUnit } from './length.ts'
+import { Mass, MassUnit } from './mass.ts'
+import { Time, TimeUnit } from './time.ts'
+import { Money, MoneyUnit } from './money.ts'
 
 import type { JsonObject } from './jsonTypes.ts'
 
@@ -38,7 +38,14 @@ export function parseQuantityJson(data: JsonObject): Quantity {
 /**
  * The types of quantity dimensions currently available in the library.
  */
-export type QuantityDimensions = Quantity['dimension']
+// export type QuantityDimensions = Quantity['dimension']
+export type QuantityDimensions = Length['dimension'] | Mass['dimension'] | Time['dimension'] | Money['dimension']
+type DimensionSeparator = ' :: '
+export type QuantityTypeString2 =
+  | `${Length['dimension']}${DimensionSeparator}${LengthUnit}`
+  | `${Mass['dimension']}${DimensionSeparator}${MassUnit}`
+  | `${Time['dimension']}${DimensionSeparator}${TimeUnit}`
+  | `${Money['dimension']}${DimensionSeparator}${MoneyUnit}`
 
 /**
  * Helper type for QuantityTypeString.  Not exported because I don't see any particular
