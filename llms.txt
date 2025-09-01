@@ -1,0 +1,73 @@
+# Unitopia
+
+> A TypeScript library for type-safe dimensional quantities with unit conversion and normalization. Zero dependencies.
+
+Unitopia provides strongly-typed representations of physical measurements (length, mass, time) and monetary values, with automatic unit conversion and array normalization capabilities.
+
+## Core Features
+
+- Type-safe quantity representation with compile-time unit checking
+- Automatic unit conversion within dimensions
+- Array normalization for collections of mixed units
+- JSON serialization/deserialization
+- Zero runtime dependencies
+- Available dimensions: Length, Mass, Time, Money
+
+## Documentation
+
+- [README](README.md): Complete usage guide with examples
+- [API Documentation](src/main.ts): Entry point showing all exports
+- [Development Guide](CLAUDE.md): Architecture and development commands
+
+## Examples
+
+### Creating and Converting Quantities
+```typescript
+import { Length, Mass } from '@zepln/unitopia'
+
+const height = Length.Inches(71)
+const heightInCm = Length.convert(height, 'Centimeter') // 180.34
+
+const weight = Mass.Pounds(150)
+const weightInKg = Mass.convert(weight, 'Kilogram') // 68.04
+```
+
+### Array Normalization
+```typescript
+const lengths = [Length.Inches(12), Length.Meters(0.5), Length.Feet(2)]
+const normalized = Length.normalize(lengths, 'Centimeter')
+// All values converted to centimeters
+```
+
+### JSON Serialization
+```typescript
+const m = Mass.Kilograms(75)
+JSON.stringify(m) // {"dimension":"Mass","unit":"Kilogram","value":75}
+
+const parsed = Mass.parse('{"dimension":"Mass","unit":"Kilogram","value":75}')
+```
+
+## Implementation Details
+
+Each dimension is implemented as a TypeScript class with:
+- Static factory methods for each unit (e.g., `Length.Meters()`)
+- Generic type parameter for compile-time unit tracking
+- Conversion tables for supported units
+- Parse/tryParse methods for safe deserialization
+
+## Installation
+
+```bash
+npm install @zepln/unitopia
+# or
+yarn add @zepln/unitopia
+```
+
+## Source Code Structure
+
+- [src/length.ts](src/length.ts): Length dimension implementation
+- [src/mass.ts](src/mass.ts): Mass dimension implementation  
+- [src/time.ts](src/time.ts): Time dimension implementation
+- [src/money.ts](src/money.ts): Money dimension implementation
+- [src/quantity.ts](src/quantity.ts): Union types and dimension-agnostic parsing
+- [test/](test/): Comprehensive test suite using Vitest
